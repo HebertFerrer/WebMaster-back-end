@@ -1,0 +1,8 @@
+# Django
+django==2.2
+
+# Django REST Framework
+djangorestframework==3.9.2
+
+# Syntax
+pylint==2.3.1

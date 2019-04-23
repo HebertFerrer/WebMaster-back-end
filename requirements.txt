@@ -1,8 +1,13 @@
 # Django
 django==2.2
+django-extensions==2.1.6
+Pillow==6.0.0
 
 # Django REST Framework
 djangorestframework==3.9.2
 
 # Syntax
 pylint==2.3.1
+
+# Database
+mysqlclient

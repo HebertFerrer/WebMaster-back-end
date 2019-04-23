@@ -17,4 +17,5 @@ class ProjectModel(models.Model):
 
     class Meta:
         """Meta class."""
-        ordering = ('-created')
+        abstract = True
+        ordering = ('-created',)

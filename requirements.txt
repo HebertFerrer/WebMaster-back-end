@@ -8,6 +8,7 @@ djangorestframework==3.9.2
 
 # Syntax
 pylint==2.3.1
+pylint-django==2.0.8
 
 # Database
 mysqlclient

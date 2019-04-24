@@ -34,24 +34,25 @@ DJANGO_SETTINGS_MODULE = 'config.settings'
 
 # Application definition
 
-DJANGO_APPS = [
+DJANGO_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-]
-THIRD_PARTY_APPS = [
+)
+THIRD_PARTY_APPS = (
     'rest_framework',
     'django_extensions',
-]
-LOCAL_APPS = [
+    'rest_framework.authtoken',
+)
+LOCAL_APPS = (
     'apps.users.apps.UsersConfig',
     'apps.projects.apps.ProjectsConfig',
-]
+)
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -138,3 +139,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Configuration to REST Framework.
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}

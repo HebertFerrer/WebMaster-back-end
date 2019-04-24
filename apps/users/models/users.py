@@ -5,8 +5,10 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
 
+# Utils
+from apps.utils.models import ProjectModel
 
-class User(AbstractUser):
+class User(ProjectModel, AbstractUser):
     """Custom user model."""
 
     email = models.EmailField(
@@ -25,5 +27,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = [
         'password',
         'username',
+        'first_name',
+        'last_name',
     ]
     USERNAME_FIELD = 'email'

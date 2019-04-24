@@ -41,7 +41,7 @@ class Profile(ProjectModel):
     picture = models.ImageField(upload_to='statics.users', blank=True, null=True)
     biography = models.TextField(null=True, blank=True)
     born_date = models.DateField()
-    Country = models.ForeignKey('users.Country', on_delete=models.SET_NULL, null=True)
+    country = models.ForeignKey('users.Country', on_delete=models.SET_NULL, null=True)
     verified = models.BooleanField(
         default=False,
         help_text=(
@@ -49,20 +49,19 @@ class Profile(ProjectModel):
         )
     )
 
-    class Meta:
-        abstract = True
 
-
-class ProfileCreator(Profile):
+class ProfileCreator(ProjectModel):
     """Creator's profile."""
 
     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
 
-class ProfileWorker(Profile):
+class ProfileWorker(ProjectModel):
     """Worker's profile."""
 
     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     projects = models.ManyToManyField(
         'projects.Project',
         through='projects.Worker'

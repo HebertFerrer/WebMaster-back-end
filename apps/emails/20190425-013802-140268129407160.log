@@ -1,0 +1,40 @@
+Content-Type: multipart/alternative;
+ boundary="===============3300766124686265314=="
+MIME-Version: 1.0
+Subject: Hola @hebert!
+From: noreply@email.com
+To: hebert@gmail.com
+Date: Thu, 25 Apr 2019 01:38:02 -0000
+Message-ID: <155615628203.22258.12910840268135891203@Teseo-E560>
+
+--===============3300766124686265314==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Hebert Ferrer</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/5930461990a96a493141f767efb89f08f41b4f1c/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============3300766124686265314==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Hebert Ferrer</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/5930461990a96a493141f767efb89f08f41b4f1c/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============3300766124686265314==--
+
+-------------------------------------------------------------------------------

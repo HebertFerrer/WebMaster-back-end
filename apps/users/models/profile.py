@@ -54,14 +54,14 @@ class ProfileCreator(ProjectModel):
     """Creator's profile."""
 
     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    profile = models.OneToOneField(Profile, related_name='profile_creator', on_delete=models.CASCADE)
 
 
 class ProfileWorker(ProjectModel):
     """Worker's profile."""
 
     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
-    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    profile = models.OneToOneField(Profile, related_name='profile_worker', on_delete=models.CASCADE)
     projects = models.ManyToManyField(
         'projects.Project',
         through='projects.Worker'

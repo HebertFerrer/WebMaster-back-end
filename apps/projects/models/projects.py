@@ -20,3 +20,7 @@ class Project(ProjectModel):
     category = models.ForeignKey('projects.Category', on_delete=models.SET_NULL, null=True)
     creator = models.ForeignKey('users.ProfileCreator', on_delete=models.SET_NULL, null=True)
     finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        """Return project title."""
+        return self.title

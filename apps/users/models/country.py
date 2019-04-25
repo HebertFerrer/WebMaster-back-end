@@ -11,3 +11,7 @@ class Country(ProjectModel):
     """Country model."""
 
     name = models.CharField(max_length=60)
+
+    def __str__(self):
+        """Return name."""
+        return self.name

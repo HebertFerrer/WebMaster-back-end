@@ -1,3 +1,3 @@
 from .users import *
-from .profile import *
+from .profiles import *
 from .country import *

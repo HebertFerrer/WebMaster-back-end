@@ -1,0 +1,40 @@
+Content-Type: multipart/alternative;
+ boundary="===============3672696797285998676=="
+MIME-Version: 1.0
+Subject: Hola @pedro!
+From: noreply@email.com
+To: pedro@gmail.com
+Date: Thu, 25 Apr 2019 11:40:16 -0000
+Message-ID: <155619241679.5105.10439403529492137700@Teseo-E560>
+
+--===============3672696797285998676==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Pedro Angel</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/8e6851701d7a08b5466a0b6a4a0fc8ceded7b351/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============3672696797285998676==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Pedro Angel</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/8e6851701d7a08b5466a0b6a4a0fc8ceded7b351/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============3672696797285998676==--
+
+-------------------------------------------------------------------------------

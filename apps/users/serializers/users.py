@@ -23,11 +23,14 @@ from apps.users.models import (
 # Serializers
 from apps.users.serializers import ProfileModelSerializer
 
+#Utils
+from apps.utils.serializers import DynamicFieldsModelSerializer
 
-class UserModelSerializer(serializers.ModelSerializer):
+
+class UserModelSerializer(DynamicFieldsModelSerializer):
     """User model serializer."""
 
-    profile = ProfileModelSerializer(read_only=True)
+    profile = serializers.SerializerMethodField()
 
     class Meta:
         """Meta class."""
@@ -40,6 +43,26 @@ class UserModelSerializer(serializers.ModelSerializer):
             'last_name',
             'profile',
         )
+
+    def get_profile(self, obj):
+        """Dinamically add kwargs to ProfileModelSerializer."""
+        context = {'action': None}
+        if self.context['action'] == 'list':
+            fields = (
+                'picture',
+                'verified',
+                'born_date',
+                'profile_creator',
+                'profile_worker',
+            )
+            context['action'] = self.context['action']
+            return ProfileModelSerializer(
+                obj.profile,
+                read_only=True,
+                fields=fields,
+                context=context
+            ).data
+        return ProfileModelSerializer(obj.profile, read_only=True, context=context).data
 
 
 class UserSignupSerializer(serializers.Serializer):

@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     'django_extensions',
     'rest_framework.authtoken',
+    'django_filters',
 )
 LOCAL_APPS = (
     'apps.users.apps.UsersConfig',

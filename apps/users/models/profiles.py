@@ -54,7 +54,11 @@ class ProfileCreator(ProjectModel):
     """Creator's profile."""
 
     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
-    profile = models.OneToOneField(Profile, related_name='profile_creator', on_delete=models.CASCADE)
+    profile = models.OneToOneField(
+        Profile,
+        related_name='profile_creator',
+        on_delete=models.CASCADE
+    )
 
 
 class ProfileWorker(ProjectModel):

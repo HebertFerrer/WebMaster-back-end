@@ -1,9 +1,20 @@
 """User views."""
 
+# Django
+from django.shortcuts import get_object_or_404
+
 # Django REST Framework
 from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+# Filters
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import (
+    SearchFilter,
+    OrderingFilter
+)
+from apps.users.filters import UserFilter
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
@@ -17,10 +28,18 @@ from apps.users.serializers import (
     UserModelSerializer,
     UserSignupSerializer,
     VerifyAccountSerializer,
-    UserLoginSerializer
+    UserLoginSerializer,
+    ProfileModelSerializer
 )
 
-class UserViewSet(mixins.RetrieveModelMixin,
+# Utils
+from apps.utils.views import DynamicFieldView
+
+
+class UserViewSet(DynamicFieldView,
+                  mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin,
+                  mixins.UpdateModelMixin,
                   viewsets.GenericViewSet):
     """A viewset that provides login, signup and verification account."""
 
@@ -28,13 +47,38 @@ class UserViewSet(mixins.RetrieveModelMixin,
     queryset = User.objects.filter(is_active=True)
     lookup_field = 'username'
 
+    # Filters
+    filter_backends = (
+        DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter
+    )
+    ordering_fields = (
+        'username',
+        'profile__born_date',
+        'profile__profile_worker__reputation',
+        'profile__profile_creator__reputation',
+    )
+    filterset_fields = (
+        'profile__verified',
+        'profile__profile_worker__reputation',
+    )
+
+    # Return dynamic fields
+    fields_to_return = {
+        'list': ('username', 'phone_number', 'first_name', 'last_name', 'profile')
+    }
 
     def get_permissions(self):
+        """Get permission base on action."""
         permission_classes = []
-        if self.action == 'retrieve':
+        if self.action in ['retrieve', 'list']:
             permission_classes.append(IsAuthenticated)
-            permission_classes.append(IsAccountOwner)
+        if self.action in ['update', 'profile']:
+            permission_classes.extend([IsAuthenticated, IsAccountOwner])
         return [permission() for permission in permission_classes]
+
+    # Actions
 
     @action(detail=False, methods=['post'])
     def signup(self, request):
@@ -69,4 +113,19 @@ class UserViewSet(mixins.RetrieveModelMixin,
             'token': token,
             'user': self.get_serializer(user).data
         }
+        return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['put', 'patch'])
+    def profile(self, request, username):
+        """Update profile's information."""
+        user = get_object_or_404(User, username=username)
+        partial = request.method == 'PATCH'
+        serializer = ProfileModelSerializer(
+            user.profile,
+            data=request.data,
+            partial=partial
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_200_OK)

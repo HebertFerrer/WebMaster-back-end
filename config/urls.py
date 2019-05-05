@@ -23,4 +23,7 @@ urlpatterns = [
 
     # Users
     path('', include('apps.users.urls')),
+
+    # Projects
+    path('', include('apps.projects.urls')),
 ]

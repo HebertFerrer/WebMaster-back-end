@@ -14,8 +14,12 @@ from apps.users.models import (
 )
 from apps.projects.models import Project
 
+# Choices
+from apps.users.choices import GENDER_CHOICES
+
 # Utils
 from apps.utils.serializers import DynamicFieldsModelSerializer
+
 
 class ProfileCreatorModelSerializer(DynamicFieldsModelSerializer):
     """Profile creator model serializer."""
@@ -38,6 +42,7 @@ class ProfileCreatorModelSerializer(DynamicFieldsModelSerializer):
         return ProjectModelSerializer(
             Project.objects.filter(creator=obj),
             many=True,
+            read_only=True,
             fields=('title', 'description', 'reputation')
         ).data
 
@@ -62,6 +67,7 @@ class ProfileWorkerModelSerializer(DynamicFieldsModelSerializer):
         """Add projects via query."""
         return ProjectModelSerializer(
             obj.projects,
+            read_only=True,
             many=True,
             fields=('title', 'description', 'reputation')
         ).data
@@ -71,6 +77,10 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
     """Profile model serializer."""
 
     country = serializers.StringRelatedField()
+
+    # Choices
+    gender = serializers.CharField(source='get_gender_display')
+    country = serializers.CharField(source='get_country_display')
 
     # Sub-Profiles
     profile_worker = serializers.SerializerMethodField()
@@ -83,6 +93,7 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
             'biography',
             'born_date',
             'country',
+            'gender',
             'verified',
             'profile_worker',
             'profile_creator',

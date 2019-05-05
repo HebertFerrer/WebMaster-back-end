@@ -20,10 +20,14 @@ from apps.users.models import (
     ProfileCreator
 )
 
+# Choices
+from apps.users.choices import GENDER_CHOICES, COUNTRY_CHOICES
+
 # Serializers
 from apps.users.serializers import ProfileModelSerializer
 
-#Utils
+# Utils
+from apps.utils.validators import choices_validator
 from apps.utils.serializers import DynamicFieldsModelSerializer
 
 
@@ -100,23 +104,41 @@ class UserSignupSerializer(serializers.Serializer):
     last_name = serializers.CharField(max_length=100)
     born_date = serializers.DateField()
 
+    # Choices
+    gender = serializers.IntegerField()
+    country = serializers.IntegerField()
+
+
     def validate(self, data):
         """Validate password and password_confirmation are the same."""
 
         if data['password'] != data['password_confirmation']:
             raise serializers.ValidationError('Passwords must match.')
+
         return data
+
+    def validate_gender(self, value):
+        """Show choices."""
+        return choices_validator(value, GENDER_CHOICES)
+
+    def validate_country(self, value):
+        """Show choices."""
+        return choices_validator(value, COUNTRY_CHOICES)
 
     def create(self, data):
         """Handle profile creation."""
         data.pop('password_confirmation')
         date = data.pop('born_date')
+        gender = data.pop('gender')
+        country = data.pop('country')
 
         user = User.objects.create(**data, is_active=False)
         profile = Profile.objects.create(
             user=user,
             verified=False,
-            born_date=date
+            born_date=date,
+            gender=gender,
+            country=country
         )
         ProfileWorker.objects.create(profile=profile)
         ProfileCreator.objects.create(profile=profile)

@@ -3,6 +3,8 @@
 # Django
 from django.core.exceptions import ValidationError
 
+# Serializers
+from rest_framework import serializers
 
 def reputation_validator(value):
     """Validates that reputation is between 0 and 5."""
@@ -11,3 +13,15 @@ def reputation_validator(value):
         raise ValidationError(
             'Reputation must be a integer between 0 and 5.'
         )
+
+def choices_validator(value, CHOICES_TUPLE):
+    """Return choices info."""
+
+    choices = [c[0] for c in CHOICES_TUPLE]
+
+    if value not in choices:
+        fields = ''
+        for choice in CHOICES_TUPLE:
+            fields += '| {} - {} |'.format(choice[0], choice[1])
+        raise serializers.ValidationError('Option is not valid, try: {}'.format(fields))
+    return value

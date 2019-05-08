@@ -11,4 +11,9 @@ class Activity(ProjectModel):
 
     description = models.CharField(max_length=200)
     duration = models.IntegerField()
-    project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    finished = models.BooleanField(default=False)
+    project = models.ForeignKey(
+        'projects.Project',
+        related_name='activities',
+        on_delete=models.CASCADE
+    )

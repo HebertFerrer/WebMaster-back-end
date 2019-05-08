@@ -33,3 +33,6 @@ class User(ProjectModel, AbstractUser):
         'last_name',
     ]
     USERNAME_FIELD = 'email'
+
+    def __str__(self):
+        return self.username

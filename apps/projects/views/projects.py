@@ -1,7 +1,9 @@
 """Project views."""
 
 # Django REST Framework
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
+from rest_framework.response import Response
+
 
 # Serializers
 from apps.projects.serializers import (
@@ -12,13 +14,12 @@ from apps.projects.serializers import (
 # Permissions
 from rest_framework.permissions import IsAuthenticated
 
-
 # Models
 from apps.projects.models import Project
 
+
 class ProjectViewSet(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
-                     mixins.CreateModelMixin,
                      viewsets.GenericViewSet):
     """Project view set."""
 
@@ -32,10 +33,10 @@ class ProjectViewSet(mixins.ListModelMixin,
         permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
-
-    def get_serializer_class(self):
-        """Get serializer base on action."""
-        serializer_class = ProjectModelSerializer
-        if self.action == 'create':
-            serializer_class = ProjectCreateSerializer
-        return serializer_class
+    def create(self, request, *args, **kwargs):
+        """Handle project creation."""
+        serializer = ProjectCreateSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        project = serializer.save()
+        data = ProjectModelSerializer(project).data
+        return Response(data, status=status.HTTP_201_CREATED)

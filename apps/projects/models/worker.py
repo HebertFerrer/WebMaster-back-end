@@ -13,7 +13,7 @@ from apps.utils.models import ProjectModel
 class Worker(ProjectModel):
     """Project worker."""
 
-    worker = models.ForeignKey('users.ProfileWorker', on_delete=models.SET_NULL, null=True)
+    worker = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
     project = models.ForeignKey('projects.Project', on_delete=models.SET_NULL, null=True)
 
     position = models.IntegerField(choices=POSITION_CHOICES)

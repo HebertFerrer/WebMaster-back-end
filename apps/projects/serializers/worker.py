@@ -11,9 +11,10 @@ from apps.users.choices import POSITION_CHOICES
 
 # Utils
 from apps.utils.validators import choices_validator
+from apps.utils.serializers import DynamicFieldsModelSerializer
 
 
-class WorkerModelSerializer(serializers.ModelSerializer):
+class WorkerModelSerializer(DynamicFieldsModelSerializer):
     """Worker model serializer."""
 
     worker = serializers.SerializerMethodField()
@@ -30,14 +31,15 @@ class WorkerModelSerializer(serializers.ModelSerializer):
     def get_worker(self, obj):
         """Return worker information."""
 
-        # Serializer
-        from apps.users.serializers import ProfileWorkerModelSerializer
+        print('Este es el obj: {}'.format(obj.worker))
 
-        return ProfileWorkerModelSerializer(
+        # Serializer
+        from apps.users.serializers import UserModelSerializer
+
+        return UserModelSerializer(
             obj.worker,
-            read_only=True,
-            fields=('reputation', 'profile')
-        )
+            fields=('username', 'profile_worker')
+        ).data
 
     def validate_position(self, value):
         """Show choices."""

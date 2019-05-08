@@ -40,7 +40,7 @@ class ProfileCreatorModelSerializer(DynamicFieldsModelSerializer):
     def get_projects(self, obj):
         """Add projects via query."""
         return ProjectModelSerializer(
-            Project.objects.filter(creator=obj),
+            Project.objects.filter(creator=obj.profile.user),
             many=True,
             read_only=True,
             fields=('title', 'description', 'reputation')
@@ -54,19 +54,13 @@ class ProfileWorkerModelSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = ProfileWorker
-        fields = (
-            'reputation',
-            'projects',
-        )
-        read_only_fields = (
-            'reputation',
-            'projects'
-        )
+        fields = ('reputation', 'projects',)
+        read_only_fields = ('reputation', 'projects',)
 
     def get_projects(self, obj):
         """Add projects via query."""
         return ProjectModelSerializer(
-            obj.projects,
+            Project.objects.filter(workers=obj.profile.user),
             read_only=True,
             many=True,
             fields=('title', 'description', 'reputation')
@@ -75,8 +69,6 @@ class ProfileWorkerModelSerializer(DynamicFieldsModelSerializer):
 
 class ProfileModelSerializer(DynamicFieldsModelSerializer):
     """Profile model serializer."""
-
-    country = serializers.StringRelatedField()
 
     # Choices
     gender = serializers.CharField(source='get_gender_display')
@@ -89,23 +81,18 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
     class Meta:
         model = Profile
         fields = (
-            'picture',
-            'biography',
-            'born_date',
-            'country',
-            'gender',
-            'verified',
-            'profile_worker',
-            'profile_creator',
+            'picture', 'biography',
+            'born_date', 'country',
+            'gender', 'verified',
+            'profile_worker', 'profile_creator',
         )
         read_only_fields = ('verified',)
 
     def get_profile_worker(self, obj):
         """Dinamically add kwargs to ProfileWorkerModelSerializer."""
         if self.context['action'] == 'list':
-            fields = (
-                'reputation',
-            )
+            fields = ('reputation',)
+
             return ProfileWorkerModelSerializer(
                 obj.profile_worker,
                 read_only=True,
@@ -116,10 +103,8 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
     def get_profile_creator(self, obj):
         """Dinamically add kwargs to ProfileCreatorModelSerializer."""
         if self.context['action'] == 'list':
-            fields = (
-                'reputation',
-                'projects',
-            )
+            fields = ('reputation', 'projects',)
+
             return ProfileCreatorModelSerializer(
                 obj.profile_creator,
                 read_only=True,

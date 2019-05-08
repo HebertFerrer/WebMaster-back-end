@@ -29,7 +29,9 @@ from apps.users.serializers import (
     UserSignupSerializer,
     VerifyAccountSerializer,
     UserLoginSerializer,
-    ProfileModelSerializer
+    ProfileModelSerializer,
+    FollowCreateSerializer,
+    FollowModelSerializer
 )
 
 # Utils
@@ -79,7 +81,6 @@ class UserViewSet(DynamicFieldView,
         return [permission() for permission in permission_classes]
 
     # Actions
-
     @action(detail=False, methods=['post'])
     def signup(self, request):
         """Signup action."""
@@ -129,3 +130,17 @@ class UserViewSet(DynamicFieldView,
         serializer.save()
         data = UserModelSerializer(user).data
         return Response(data, status=status.HTTP_200_OK)
+
+    # @action(detail=True, methods=['post'])
+    # def follow(self, request, username):
+    #     """
+    #     Create follow instance.
+    #     """
+    #     user = get_object_or_404(User, username=username)
+    #     context = {'request': request, 'user': user}
+
+    #     serializer = FollowCreateSerializer(data=request.data, context=context)
+    #     serializer.is_valid(raise_exception=True)
+    #     follow = serializer.save()
+    #     data = FollowModelSerializer(follow).data
+    #     return Response(data, status=status.HTTP_201_CREATED)

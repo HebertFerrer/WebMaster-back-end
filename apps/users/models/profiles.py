@@ -52,4 +52,3 @@ class ProfileWorker(ProjectModel):
 
     # CV
     position = models.IntegerField(choices=POSITION_CHOICES, null=True)
-    projects = models.ManyToManyField('projects.Project', through='projects.Worker')

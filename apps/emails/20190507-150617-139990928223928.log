@@ -1,0 +1,40 @@
+Content-Type: multipart/alternative;
+ boundary="===============0561755374618808445=="
+MIME-Version: 1.0
+Subject: Hola @jose!
+From: noreply@email.com
+To: jose@gmail.com
+Date: Tue, 07 May 2019 15:06:17 -0000
+Message-ID: <155724157758.16801.4692033161993676268@Teseo-E560>
+
+--===============0561755374618808445==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Jose Luis</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/e8f7c2a30cf26ee52084ac18e6789cfe13c436ee/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============0561755374618808445==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<html>
+<body>
+
+    <h1>Hola Jose Luis</h1>
+    <p>Para verficar tu cuenta haz <a href="localhost:8000/users/verify/e8f7c2a30cf26ee52084ac18e6789cfe13c436ee/">click aqui.</a>
+    </p>
+
+</body>
+</html>
+--===============0561755374618808445==--
+
+-------------------------------------------------------------------------------

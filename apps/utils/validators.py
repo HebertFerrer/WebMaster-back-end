@@ -19,6 +19,9 @@ def choices_validator(value, CHOICES_TUPLE):
 
     choices = [c[0] for c in CHOICES_TUPLE]
 
+    print(type(value))
+
+    value = int(value)
     if value not in choices:
         fields = ''
         for choice in CHOICES_TUPLE:

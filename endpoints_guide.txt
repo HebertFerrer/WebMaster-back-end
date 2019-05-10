@@ -7,6 +7,7 @@ host/users/signup/ -> Create                                            x
 host/users/verify/ -> Verify account                                    x
 host/users/login/ -> Login                                              x
 host/users/<username>/profile/ -> Update profile                        x
+-------------------------------------------------------------------------
 host/users/<username>/follow/ -> Create                                 x
 host/users/<username>/follow/followers/ -> List followers               x
 host/users/<username>/follow/request/ -> List follow request            x
@@ -14,8 +15,45 @@ host/users/<username>/follow/<code>/accept/ -> accept follow request    x
 host/users/<username>/follow/<code>/reject/ -> reject follow request    x
 
 # Projects
-host/projects/ -> Create, Retrieve, List                                x
-host/projects/<slug_name>/ -> Update
-host/projects/<slug_name>/activites/ -> Update activites
+host/projects/ -> Create, List have to add publications                                     x
+host/projects/<slug_name>/ -> Update, Retrieve                                              x
+-------------------------------------------------------------------------
+host/projects/<slug_name>/applications/ -> List project application requests                x
+host/projects/<slug_name>/applications/<code>/reject/ -> Reject project application         x
+host/projects/<slug_name>/applications/<code>/accept/ -> Accept project application         x
+-------------------------------------------------------------------------
+# Aun o se sabe si se hara esto
+host/projects/<slug_name>/activites/ -> Create activity
+host/projects/<slug_name>/activites/<id>/ -> Update activity
+host/projects/<slug_name>/activites/precedence/ -> set precedence
 host/projects/<slug_name>/activites/<id>/finish/ -> Finish or complete activity
-host/projects/<slug_name>/applicate/<position>/ -> Create application to a project
+-------------------------------------------------------------------------
+host/projects/<slug_name>/jobs/ -> Create job                                               x
+host/projects/<slug_name>/jobs/<id>/ -> Update-Delete job                                   x
+host/projects/<slug_name>/jobs/<id>/applicate/ -> Create application to a job               x
+-------------------------------------------------------------------------
+host/projects/<slug_name>/publications/ -> Create
+host/projects/<slug_name>/publications/<id>/ -> Update, Delete
+
+# Publications
+host/publications/ -> List publications
+host/publications/<id>/ -> Retrieve
+host/publications/<id>/like/ -> Create like
+host/publications/<id>/like/<id>/ -> Delete like
+-------------------------------------------------------------------------
+host/publications/<id>/comments/ -> List, Create
+host/publications/<id>/comments/<id>/ -> Update, Delete
+
+# Donations
+host/projects/<slug_name>/donations/ -> List
+host/projects/<slug_name>/donations/donate/ -> Create donation
+
+# Califications
+host/projects/<slug_name>/califications/ -> List
+host/projects/<slug_name>/califications/calificate/ -> Create calification
+-------------------------------------------------------------------------
+host/worker/<id>/califications/ -> List
+host/worker/<id>/califications/calificate/ -> Create calification
+-------------------------------------------------------------------------
+host/creator/<id>/califications/ -> List
+host/creator/<id>/califications/calificate/ -> Create calification

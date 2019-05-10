@@ -24,11 +24,13 @@ from apps.utils.validators import choices_validator
 class ProjectModelSerializer(DynamicFieldsModelSerializer):
     """Project model serializer."""
 
-    workers = serializers.SerializerMethodField()
-    slots = serializers.SerializerMethodField()
     creator = serializers.StringRelatedField()
 
-    activities = ActivityModelSerializer(many=True, read_only=True)
+    # Nested
+    workers = serializers.SerializerMethodField()
+    jobs = serializers.SerializerMethodField()
+
+    # activities = ActivityModelSerializer(many=True, read_only=True)
 
     # choices
     category = serializers.CharField(source="get_category_display")
@@ -47,13 +49,12 @@ class ProjectModelSerializer(DynamicFieldsModelSerializer):
             'creator',
             'finished',
             'workers',
-            'slots',
-            'activities',
+            'jobs',
+            # 'activities',
         )
         read_only_fields = (
             'reputation',
             'creator',
-            # 'workers',
         )
 
     def get_workers(self, obj):
@@ -62,16 +63,17 @@ class ProjectModelSerializer(DynamicFieldsModelSerializer):
         return WorkerModelSerializer(
             Worker.objects.filter(worker__isnull=False, project=obj),
             many=True,
-            fields=('worker', 'position',)
+            fields=('id', 'worker', 'position',),
+            context={'action': 'project'}
         ).data
 
-    def get_slots(self, obj):
-        """Handle slots for workers."""
+    def get_jobs(self, obj):
+        """Handle jobs for workers."""
 
         return WorkerModelSerializer(
             Worker.objects.filter(worker__isnull=True, project=obj),
             many=True,
-            fields=('position',)
+            fields=('id', 'position', 'created',)
         ).data
 
 
@@ -95,7 +97,7 @@ class ProjectCreateSerializer(serializers.Serializer):
     creator = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     # Nested serializers
-    slots = WorkerModelSerializer(many=True, required=False)
+    jobs = WorkerModelSerializer(many=True, required=False)
     activities = ActivityModelSerializer(many=True)
 
     # Validations
@@ -105,15 +107,15 @@ class ProjectCreateSerializer(serializers.Serializer):
 
     def create(self, data):
         """Handle project creation."""
-        slots = data.pop('slots', None)
+        jobs = data.pop('jobs', None)
         activities = data.pop('activities', None)
 
         # Project
         project = Project.objects.create(**data, finished=False)
 
-        # slots
-        for slot in slots:
-            Worker.objects.create(**slot, project=project)
+        # jobs
+        for job in jobs:
+            Worker.objects.create(**job, project=project)
 
         # activities
         for activity in activities:

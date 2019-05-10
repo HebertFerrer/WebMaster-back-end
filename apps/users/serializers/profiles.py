@@ -24,6 +24,7 @@ from apps.utils.serializers import DynamicFieldsModelSerializer
 class ProfileCreatorModelSerializer(DynamicFieldsModelSerializer):
     """Profile creator model serializer."""
 
+    # Nested
     projects = serializers.SerializerMethodField()
 
     class Meta:
@@ -50,11 +51,15 @@ class ProfileCreatorModelSerializer(DynamicFieldsModelSerializer):
 class ProfileWorkerModelSerializer(DynamicFieldsModelSerializer):
     """Profile worker model serializer."""
 
+    # Nested
     projects = serializers.SerializerMethodField()
+
+    # Choices
+    position = serializers.CharField(source='get_position_display')
 
     class Meta:
         model = ProfileWorker
-        fields = ('reputation', 'projects',)
+        fields = ('reputation', 'projects', 'position',)
         read_only_fields = ('reputation', 'projects',)
 
     def get_projects(self, obj):
@@ -74,7 +79,7 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
     gender = serializers.CharField(source='get_gender_display')
     country = serializers.CharField(source='get_country_display')
 
-    # Sub-Profiles
+    # Sub-Profiles (nested)
     profile_worker = serializers.SerializerMethodField()
     profile_creator = serializers.SerializerMethodField()
 
@@ -90,24 +95,46 @@ class ProfileModelSerializer(DynamicFieldsModelSerializer):
 
     def get_profile_worker(self, obj):
         """Dinamically add kwargs to ProfileWorkerModelSerializer."""
-        if self.context['action'] == 'list':
-            fields = ('reputation',)
+        action = self.context.get('action', None)
+        context = {'action': action}
 
-            return ProfileWorkerModelSerializer(
-                obj.profile_worker,
-                read_only=True,
-                fields=fields
-            ).data
+        if action == 'list':
+            fields = ('reputation',)
+            return self.filtered_representation_worker(obj, fields, context)
+
+        if action in ['application', 'project']:
+            fields = ('reputation', 'position',)
+            return self.filtered_representation_worker(obj, fields, context)
+
         return ProfileWorkerModelSerializer(obj.profile_worker, read_only=True).data
 
     def get_profile_creator(self, obj):
         """Dinamically add kwargs to ProfileCreatorModelSerializer."""
-        if self.context['action'] == 'list':
-            fields = ('reputation', 'projects',)
+        action = self.context.get('action', None)
+        context = {'action': action}
 
-            return ProfileCreatorModelSerializer(
-                obj.profile_creator,
-                read_only=True,
-                fields=fields
-            ).data
+        if action == 'list':
+            fields = ('reputation',)
+            return self.filtered_representation_creator(obj, fields, context)
+
+        if action == 'application':
+            fields = ('reputation',)
+            return self.filtered_representation_creator(obj, fields, context)
+
         return ProfileCreatorModelSerializer(obj.profile_creator, read_only=True).data
+
+    def filtered_representation_creator(self, obj, fields, context):
+        """Return Model with filtered fields."""
+        return ProfileCreatorModelSerializer(
+            obj.profile_creator,
+            fields=fields,
+            context=context
+        ).data
+
+    def filtered_representation_worker(self, obj, fields, context):
+        """Return Model with filtered fields."""
+        return ProfileWorkerModelSerializer(
+            obj.profile_worker,
+            fields=fields,
+            context=context
+        ).data

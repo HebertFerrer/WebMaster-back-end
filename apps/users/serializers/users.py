@@ -50,8 +50,10 @@ class UserModelSerializer(DynamicFieldsModelSerializer):
 
     def get_profile(self, obj):
         """Dinamically add kwargs to ProfileModelSerializer."""
-        context = {'action': None}
-        if self.context['action'] == 'list':
+        action = self.context.get('action', None)
+        context = {'action': action}
+
+        if action == 'list':
             fields = (
                 'picture',
                 'verified',
@@ -59,14 +61,24 @@ class UserModelSerializer(DynamicFieldsModelSerializer):
                 'profile_creator',
                 'profile_worker',
             )
-            context['action'] = self.context['action']
-            return ProfileModelSerializer(
-                obj.profile,
-                read_only=True,
-                fields=fields,
-                context=context
-            ).data
-        return ProfileModelSerializer(obj.profile, read_only=True, context=context).data
+            return self.filtered_representation(obj, fields, context)
+
+        if action in ['application', 'project']:
+            fields = (
+                'picture',
+                'profile_worker',
+            )
+            return self.filtered_representation(obj, fields, context)
+
+        return ProfileModelSerializer(obj.profile, read_only=True).data
+
+    def filtered_representation(self, obj, fields, context):
+        """Return Model with filtered fields."""
+        return ProfileModelSerializer(
+            obj.profile,
+            fields=fields,
+            context=context
+        ).data
 
 
 class UserSignupSerializer(serializers.Serializer):

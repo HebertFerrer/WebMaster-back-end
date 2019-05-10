@@ -17,3 +17,7 @@ class Worker(ProjectModel):
     project = models.ForeignKey('projects.Project', on_delete=models.SET_NULL, null=True)
 
     position = models.IntegerField(choices=POSITION_CHOICES)
+
+
+    def __str__(self):
+        return self.position

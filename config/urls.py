@@ -26,4 +26,7 @@ urlpatterns = [
 
     # Projects
     path('', include('apps.projects.urls')),
+
+    # Publications
+    path('', include('apps.publications.urls')),
 ]

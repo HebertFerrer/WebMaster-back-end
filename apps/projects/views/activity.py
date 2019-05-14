@@ -11,7 +11,7 @@ from apps.projects.serializers import ActivityModelSerializer
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.activity import IsProjectOwner
+from apps.projects.permissions.second_level import IsProjectOwner
 
 # Models
 from apps.projects.models import Activity, Project

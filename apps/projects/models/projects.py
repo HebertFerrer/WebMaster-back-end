@@ -37,4 +37,4 @@ class Project(ProjectModel):
 
     def __str__(self):
         """Return project title."""
-        return self.title
+        return self.slug_name

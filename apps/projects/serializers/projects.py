@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 # Models
 from apps.projects.models import Project, Worker, Activity
+from apps.publications.models import Publication
 
 # Choices
 from apps.projects.choices import CATEGORY_CHOICES
@@ -29,8 +30,7 @@ class ProjectModelSerializer(DynamicFieldsModelSerializer):
     # Nested
     workers = serializers.SerializerMethodField()
     jobs = serializers.SerializerMethodField()
-
-    # activities = ActivityModelSerializer(many=True, read_only=True)
+    publications = serializers.SerializerMethodField()
 
     # choices
     category = serializers.CharField(source="get_category_display")
@@ -40,16 +40,12 @@ class ProjectModelSerializer(DynamicFieldsModelSerializer):
         """Meta class."""
         model = Project
         fields = (
-            'title',
-            'slug_name',
-            'description',
-            'cost',
-            'reputation',
-            'category',
-            'creator',
-            'finished',
-            'workers',
-            'jobs',
+            'title', 'slug_name',
+            'description', 'cost',
+            'reputation', 'category',
+            'creator', 'finished',
+            'workers', 'jobs',
+            'publications',
             # 'activities',
         )
         read_only_fields = (
@@ -74,6 +70,22 @@ class ProjectModelSerializer(DynamicFieldsModelSerializer):
             Worker.objects.filter(worker__isnull=True, project=obj),
             many=True,
             fields=('id', 'position', 'created',)
+        ).data
+
+    def get_publications(self, obj):
+        """Reurn publications with PublicationModelSerializer."""
+        from apps.publications.serializers import PublicationModelSerializer
+
+        return PublicationModelSerializer(
+            Publication.objects.filter(project=obj),
+            many=True,
+            fields=(
+                'id',
+                'user', 'description',
+                'comments', 'likes',
+                'pictures',
+                'created', 'updated',
+            )
         ).data
 
 

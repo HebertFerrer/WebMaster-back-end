@@ -10,7 +10,7 @@ from apps.projects.models import Worker
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.activity import IsProjectOwner, IsNotProjectOwner
+from apps.projects.permissions.second_level import IsProjectOwner, IsNotProjectOwner
 
 # Serializers
 from apps.projects.serializers import WorkerModelSerializer

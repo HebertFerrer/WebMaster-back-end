@@ -13,7 +13,7 @@ from apps.projects.models import Application
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.activity import IsProjectOwner
+from apps.projects.permissions.second_level import IsProjectOwner
 
 # Serializers
 from apps.projects.serializers import (

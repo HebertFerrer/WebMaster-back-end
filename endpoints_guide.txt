@@ -1,8 +1,8 @@
 host = localhost:8000
 
 # Users
-host/users/ -> List, Retrieve                                           x
-host/users/<username>/ -> Update                                        x
+host/users/ -> List                                                     x
+host/users/<username>/ -> Update, Retrieve                              x
 host/users/signup/ -> Create                                            x
 host/users/verify/ -> Verify account                                    x
 host/users/login/ -> Login                                              x
@@ -13,9 +13,12 @@ host/users/<username>/follow/followers/ -> List followers               x
 host/users/<username>/follow/request/ -> List follow request            x
 host/users/<username>/follow/<code>/accept/ -> accept follow request    x
 host/users/<username>/follow/<code>/reject/ -> reject follow request    x
+-------------------------------------------------------------------------
+host/users/hebert/applications/sended/ -> List Sended applications
+host/users/hebert/applications/recieved/ -> List Recieved applications
 
 # Projects
-host/projects/ -> Create, List have to add publications                                     x
+host/projects/ -> Create, List                                                              x
 host/projects/<slug_name>/ -> Update, Retrieve                                              x
 -------------------------------------------------------------------------
 host/projects/<slug_name>/applications/ -> List project application requests                x
@@ -32,17 +35,20 @@ host/projects/<slug_name>/jobs/ -> Create job                                   
 host/projects/<slug_name>/jobs/<id>/ -> Update-Delete job                                   x
 host/projects/<slug_name>/jobs/<id>/applicate/ -> Create application to a job               x
 -------------------------------------------------------------------------
-host/projects/<slug_name>/publications/ -> Create
-host/projects/<slug_name>/publications/<id>/ -> Update, Delete
+host/projects/<slug_name>/publications/ -> Create                                           x
+host/projects/<slug_name>/publications/<id>/ -> Delete                                      x
+host/projects/<slug_name>/publications/<id>/pictures/ -> Create                             x
+host/projects/<slug_name>/publications/<id>/pictures/<id>/ -> Delete                        x
 
 # Publications
-host/publications/ -> List publications
-host/publications/<id>/ -> Retrieve
-host/publications/<id>/like/ -> Create like
-host/publications/<id>/like/<id>/ -> Delete like
+host/publications/ -> List publications                                                     x
+host/publications/<id>/ -> Retrieve # Parece no hacer falta
 -------------------------------------------------------------------------
-host/publications/<id>/comments/ -> List, Create
-host/publications/<id>/comments/<id>/ -> Update, Delete
+host/publications/<id>/likes/ -> Create, List like                                          x
+host/publications/<id>/likes/<id>/ -> Delete like                                           x
+-------------------------------------------------------------------------
+host/publications/<id>/comments/ -> Create                                                  x
+host/publications/<id>/comments/<id>/ -> Update, Delete                                     x
 
 # Donations
 host/projects/<slug_name>/donations/ -> List

@@ -35,7 +35,7 @@ class ProjectViewSet(DynamicFieldView,
 
     # Return dynamic fields
     fields_to_return = {
-        'list': ('title', 'description', 'cost', 'reputation', 'category'),
+        'list': ('title', 'slug_name', 'description', 'cost', 'reputation', 'category'),
     }
 
     def get_permissions(self):

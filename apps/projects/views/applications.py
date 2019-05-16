@@ -13,7 +13,7 @@ from apps.projects.models import Application
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.second_level import IsProjectOwner
+from apps.projects.permissions.second_level import IsProjectOwner, ProjectIsNotFinished
 
 # Serializers
 from apps.projects.serializers import (
@@ -34,6 +34,7 @@ class ApplicationViewSet(ProjectDispatchMixin,
     serializer_class = ApplicationModelSerializer
     lookup_field = 'code'
 
+
     def get_queryset(self):
         """Return queyset."""
         return Application.objects.filter(job__project=self.project, status=3)
@@ -41,6 +42,8 @@ class ApplicationViewSet(ProjectDispatchMixin,
     def get_permissions(self):
         """Get permissions base on actions."""
         permission_classes = [IsAuthenticated, IsProjectOwner]
+        if self.action in ['reject', 'accept']:
+            permission_classes.append(ProjectIsNotFinished)
         return [p() for p in permission_classes]
 
     def get_serializer_context(self):

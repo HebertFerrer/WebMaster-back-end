@@ -20,6 +20,7 @@ host/users/hebert/applications/recieved/ -> List Recieved applications
 # Projects
 host/projects/ -> Create, List                                                              x
 host/projects/<slug_name>/ -> Update, Retrieve                                              x
+host/projects/<slug_name>/finish/ -> finish project                                         x
 -------------------------------------------------------------------------
 host/projects/<slug_name>/applications/ -> List project application requests                x
 host/projects/<slug_name>/applications/<code>/reject/ -> Reject project application         x
@@ -45,7 +46,7 @@ host/publications/ -> List publications                                         
 host/publications/<id>/ -> Retrieve # Parece no hacer falta
 -------------------------------------------------------------------------
 host/publications/<id>/likes/ -> Create, List like                                          x
-host/publications/<id>/likes/<id>/ -> Delete like                                           x
+host/publications/<id>/likes/dislike/ -> Delete like                                        x
 -------------------------------------------------------------------------
 host/publications/<id>/comments/ -> Create                                                  x
 host/publications/<id>/comments/<id>/ -> Update, Delete                                     x
@@ -55,11 +56,8 @@ host/projects/<slug_name>/donations/ -> List
 host/projects/<slug_name>/donations/donate/ -> Create donation
 
 # Califications
-host/projects/<slug_name>/califications/ -> List
-host/projects/<slug_name>/califications/calificate/ -> Create calification
+host/projects/<slug_name>/califications/ -> List, Create                                    x
 -------------------------------------------------------------------------
-host/worker/<id>/califications/ -> List
-host/worker/<id>/califications/calificate/ -> Create calification
+host/workers/<id>/califications/ -> List, Create                                            x
 -------------------------------------------------------------------------
-host/creator/<id>/califications/ -> List
-host/creator/<id>/califications/calificate/ -> Create calification
+host/creators/<id>/califications/ -> List, Create                                           x

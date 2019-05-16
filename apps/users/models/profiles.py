@@ -52,3 +52,8 @@ class ProfileWorker(ProjectModel):
 
     # CV
     position = models.IntegerField(choices=POSITION_CHOICES, null=True)
+
+
+    def __str__(self):
+        """Return str representation."""
+        return self.profile.user.__str__() # pylint: disable=not-callable

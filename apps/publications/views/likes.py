@@ -2,6 +2,8 @@
 
 # Django REST Framework
 from rest_framework import viewsets, mixins, status
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 # Models
 from apps.publications.models import Publication, Like
@@ -30,7 +32,7 @@ class LikeViewSet(PublicationDispatchMixin,
 
     # Return dynamic fields
     fields_to_return = {
-        'list': ('id', 'user',)
+        'list': ('user',)
     }
 
     def get_queryset(self):
@@ -49,3 +51,16 @@ class LikeViewSet(PublicationDispatchMixin,
         if self.action == 'create':
             context['publication'] = self.publication
         return context
+
+    @action(detail=False, methods=['delete'])
+    def dislike(self, request, id):
+        """Handle dislike."""
+        try:
+            instance = Like.objects.get(publication=self.publication, user=request.user)
+        except Like.DoesNotExist:
+            return Response(
+                {'alert': "Yout din't even liked this"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)

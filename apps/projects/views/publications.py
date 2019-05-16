@@ -12,7 +12,7 @@ from apps.publications.serializers import (
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.second_level import IsProjectOwner
+from apps.projects.permissions.second_level import IsProjectOwner, ProjectIsNotFinished
 
 # Models
 from apps.publications.models import Publication
@@ -31,18 +31,11 @@ class PublicationViewSet(ProjectDispatchMixin,
     """
 
     serializer_class = PublicationModelSerializer
-
+    permission_classes = [IsAuthenticated, IsProjectOwner, ProjectIsNotFinished]
 
     def get_queryset(self):
         """Return queryset."""
         return Publication.objects.filter(project=self.project)
-
-    def get_permissions(self):
-        """Get permissions base on action."""
-        permission_classes = [IsAuthenticated]
-        if self.action in ['create', 'delete']:
-            permission_classes.append(IsProjectOwner)
-        return [p() for p in permission_classes]
 
     def create(self, request, *args, **kwargs):
         """Create publication."""

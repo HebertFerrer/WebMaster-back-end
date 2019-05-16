@@ -29,4 +29,9 @@ urlpatterns = [
 
     # Publications
     path('', include('apps.publications.urls')),
+
+    # Califications
+    path('', include('apps.califications.urls')),
+
+
 ]

@@ -52,7 +52,12 @@ class UserModelSerializer(DynamicFieldsModelSerializer):
         """Dinamically add kwargs to ProfileModelSerializer."""
         action = self.context.get('action', None)
         context = {'action': action}
-        fields = ()
+        fields = (
+            'picture', 'biography',
+            'born_date', 'country',
+            'gender', 'verified',
+            'profile_worker', 'profile_creator',
+        )
 
         if action == 'list':
             fields = (

@@ -1,9 +1,12 @@
 """Project views."""
 
+# Django
+from django.shortcuts import get_object_or_404
+
 # Django REST Framework
 from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
-
+from rest_framework.decorators import action
 
 # Serializers
 from apps.projects.serializers import (
@@ -13,7 +16,7 @@ from apps.projects.serializers import (
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions import IsProjectOwner
+from apps.projects.permissions.projects import IsProjectOwner, ProjectIsNotFinished
 
 # Models
 from apps.projects.models import Project
@@ -41,8 +44,8 @@ class ProjectViewSet(DynamicFieldView,
     def get_permissions(self):
         """Get permissions base on action."""
         permission_classes = [IsAuthenticated]
-        if self.action == 'update':
-            permission_classes.append(IsProjectOwner)
+        if self.action in ['update', 'finish']:
+            permission_classes.extend([IsProjectOwner, ProjectIsNotFinished])
         return [permission() for permission in permission_classes]
 
     def create(self, request, *args, **kwargs):
@@ -52,3 +55,12 @@ class ProjectViewSet(DynamicFieldView,
         project = serializer.save()
         data = ProjectModelSerializer(project).data
         return Response(data, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['put', 'patch'])
+    def finish(self, request, slug_name):
+        """Finish a project."""
+        instance = get_object_or_404(Project, slug_name=slug_name)
+        serializer = self.get_serializer(instance, data={'finished': True}, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)

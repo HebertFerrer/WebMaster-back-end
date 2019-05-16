@@ -17,7 +17,7 @@ class LikeModelSerializer(DynamicFieldsModelSerializer):
 
     class Meta:
         model = Like
-        fields = ('id', 'user', 'publication')
+        fields = ('user', 'publication')
         read_only_fields = ('publication',)
 
     def get_user(self, obj):

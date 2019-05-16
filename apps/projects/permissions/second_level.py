@@ -11,6 +11,7 @@ class IsProjectOwner(BasePermission):
         """Check permissions."""
         return request.user == view.get_project().creator
 
+
 class IsNotProjectOwner(BasePermission):
     """Check if the request user is the project creator."""
 
@@ -18,3 +19,18 @@ class IsNotProjectOwner(BasePermission):
         """Check permissions."""
         return request.user != view.get_project().creator
 
+
+class ProjectIsNotFinished(BaseException):
+    """Check if project is not finished."""
+
+    def has_permission(self, request, view):
+        """Check permisions."""
+        return not view.get_project().finished
+
+
+class ProjectIsFinished(BaseException):
+    """Check if project is finished."""
+
+    def has_permission(self, request, view):
+        """Check permisions."""
+        return view.get_project().finished

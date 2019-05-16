@@ -10,7 +10,11 @@ from apps.projects.models import Worker
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.projects.permissions.second_level import IsProjectOwner, IsNotProjectOwner
+from apps.projects.permissions.second_level import (
+    IsProjectOwner,
+    IsNotProjectOwner,
+    ProjectIsNotFinished
+)
 
 # Serializers
 from apps.projects.serializers import WorkerModelSerializer
@@ -45,9 +49,9 @@ class WorkerViewSet(ProjectDispatchMixin,
         """Get permissions base on actions."""
         permission_classes = [IsAuthenticated]
         if self.action in ['create', 'update']:
-            permission_classes.append(IsProjectOwner)
+            permission_classes.extend([IsProjectOwner, ProjectIsNotFinished])
         if self.action == 'applicate':
-            permission_classes.append(IsNotProjectOwner)
+            permission_classes.extend([IsNotProjectOwner, ProjectIsNotFinished])
         return [p() for p in permission_classes]
 
     @action(detail=True, methods=['post'])

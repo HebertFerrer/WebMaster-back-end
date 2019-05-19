@@ -13,3 +13,9 @@ pylint-django==2.0.8
 
 # Database
 mysqlclient
+
+# Payment method
+easy_install --upgrade stripe
+
+# CORS
+django-cors-middleware == 1.3.1

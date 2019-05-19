@@ -47,17 +47,20 @@ THIRD_PARTY_APPS = (
     'django_extensions',
     'rest_framework.authtoken',
     'django_filters',
+    'corsheaders',
 )
 LOCAL_APPS = (
     'apps.users.apps.UsersConfig',
     'apps.projects.apps.ProjectsConfig',
     'apps.publications.apps.PublicationsConfig',
     'apps.califications.apps.CalificationConfig',
+    'apps.donations.apps.DonationConfig',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -157,3 +160,13 @@ REST_FRAMEWORK = {
 # EMAIL BACKEND
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = 'apps/emails'
+
+# STRIPE
+STRIPE_SECRET_KEY = 'sk_test_X8DiriGOSG6x0b6moMpXbH6h0008t3RKyn'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_FVpIE8JG8Vjkj9VStUt6OypD00ksisCKw9'
+
+# Allowed host
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:5500'
+)

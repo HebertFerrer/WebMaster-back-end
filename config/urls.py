@@ -33,5 +33,6 @@ urlpatterns = [
     # Califications
     path('', include('apps.califications.urls')),
 
-
+    # Donations
+    path('', include('apps.donations.urls')),
 ]

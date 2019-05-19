@@ -52,8 +52,8 @@ host/publications/<id>/comments/ -> Create                                      
 host/publications/<id>/comments/<id>/ -> Update, Delete                                     x
 
 # Donations
-host/projects/<slug_name>/donations/ -> List
-host/projects/<slug_name>/donations/donate/ -> Create donation
+host/projects/<slug_name>/donations/ -> List                                                x
+host/projects/<slug_name>/donations/donate/ -> Create donation                              x
 
 # Califications
 host/projects/<slug_name>/califications/ -> List, Create                                    x

@@ -10,6 +10,7 @@ class DynamicFieldsModelSerializer(serializers.ModelSerializer):
     controls which fields should be displayed.
     """
 
+
     def __init__(self, *args, **kwargs):
         # Don't pass the 'fields' arg up to the superclass
         fields = kwargs.pop('fields', None)

@@ -26,9 +26,7 @@ APPS_DIR = sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 SECRET_KEY = 'm$qc-5tmtg6k#+z)ktskue(1u$k2scg+c98ijl4^ak%5xh!)nv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = False
 
 DJANGO_SETTINGS_MODULE = 'config.settings'
 
@@ -148,13 +146,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'apps', 'static')
+
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR, 'apps', 'media')
+MEDIA_URL = '/media/'
 
 
 # Configuration to REST Framework.
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
-    )
+    ),
+
+    # Encoding
+    'COERCE_DECIMAL_TO_STRING': False,
+
+    # Date formating
+    'DATE_FORMAT': '%Y-%m-%d',
+    'DATETIME_FORMAT': '%Y-%m-%d %H:%M',
+
 }
 
 # EMAIL BACKEND
@@ -166,7 +177,18 @@ STRIPE_SECRET_KEY = 'sk_test_X8DiriGOSG6x0b6moMpXbH6h0008t3RKyn'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_FVpIE8JG8Vjkj9VStUt6OypD00ksisCKw9'
 
 # Allowed host
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'profactory.pythonanywhere.com']
 CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:5500'
+    '127.0.0.1:8080',
+    'localhost:8080',
 )
+# CORS_ORIGIN_ALLOW_ALL = True
+
+# SSL
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 3600
+SECURE_HSTS_PRELOAD = True
+SECURE_CONTENT_TYPE_NOSNIFF = True

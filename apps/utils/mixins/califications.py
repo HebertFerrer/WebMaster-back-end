@@ -7,21 +7,24 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 
 # Models
-from apps.users.models import ProfileWorker, ProfileCreator
+from apps.users.models import (
+    # ProfileWorker,
+    ProfileCreator
+)
 
 
-class WorkerDispatchMixin(viewsets.GenericViewSet):
-    """Ensures we have a Worker in the url."""
+# class WorkerDispatchMixin(viewsets.GenericViewSet):
+#     """Ensures we have a Worker in the url."""
 
-    def dispatch(self, request, *args, **kwargs):
-        """Validates worker in the url."""
-        pk = kwargs['id']
-        self.worker = get_object_or_404(ProfileWorker, pk=pk)
-        return super(WorkerDispatchMixin, self).dispatch(request, *args, **kwargs)
+#     def dispatch(self, request, *args, **kwargs):
+#         """Validates worker in the url."""
+#         pk = kwargs['id']
+#         self.worker = get_object_or_404(ProfileWorker, pk=pk)
+#         return super(WorkerDispatchMixin, self).dispatch(request, *args, **kwargs)
 
-    def get_worker(self):
-        """Return worker in the url."""
-        return self.worker
+#     def get_worker(self):
+#         """Return worker in the url."""
+#         return self.worker
 
 
 class CreatorDispatchMixin(viewsets.GenericViewSet):

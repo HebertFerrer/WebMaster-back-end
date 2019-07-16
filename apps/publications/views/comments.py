@@ -8,7 +8,7 @@ from apps.publications.models import Publication, Comment
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.publications.permissions import IsComment_LikeOwner, IsPublicationOwner
+from apps.publications.permissions import IsCommentOwner, IsPublicationOwner
 
 # Serializers
 from apps.publications.serializers import CommentModelSerializer
@@ -20,6 +20,7 @@ from apps.utils.mixins import PublicationDispatchMixin
 class CommentViewSet(PublicationDispatchMixin,
                      mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
+                     mixins.DestroyModelMixin,
                      viewsets.GenericViewSet):
     """Comment view set."""
 

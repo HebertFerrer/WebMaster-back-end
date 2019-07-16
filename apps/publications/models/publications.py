@@ -12,6 +12,11 @@ class Publication(ProjectModel):
 
     description = models.TextField()
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
+    picture = models.ImageField(
+        upload_to='publications',
+        blank=True,
+        null=True
+    )
 
     # m2m
     # comments = models.ManyToManyField(

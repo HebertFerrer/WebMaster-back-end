@@ -5,7 +5,6 @@ from django.core.validators import RegexValidator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
-from django.contrib.auth import authenticate
 
 # Django REST Framework
 from rest_framework import serializers
@@ -16,8 +15,9 @@ from rest_framework.authtoken.models import Token
 from apps.users.models import (
     User,
     Profile,
-    ProfileWorker,
-    ProfileCreator
+    # ProfileWorker,
+    ProfileCreator,
+    Follow
 )
 
 # Choices
@@ -34,52 +34,144 @@ from apps.utils.serializers import DynamicFieldsModelSerializer
 class UserModelSerializer(DynamicFieldsModelSerializer):
     """User model serializer."""
 
-    profile = serializers.SerializerMethodField()
+    # Now profile is writable
+    profile = ProfileModelSerializer()
+
+    followers = serializers.SerializerMethodField()
+    followeds = serializers.SerializerMethodField()
+    follow_requests = serializers.SerializerMethodField()
 
     class Meta:
         """Meta class."""
         model = User
         fields = (
-            'email',
-            'username',
-            'phone_number',
-            'first_name',
-            'last_name',
-            'profile',
+            'email', 'username',
+            'phone_number', 'first_name',
+            'last_name', 'profile',
+            'followers', 'followeds',
+            'follow_requests',
         )
 
-    def get_profile(self, obj):
-        """Dinamically add kwargs to ProfileModelSerializer."""
-        action = self.context.get('action', None)
-        context = {'action': action}
+    # def get_profile(self, obj):
+        # """Dinamically add kwargs to ProfileModelSerializer."""
+        # view = self.context.get('view', None)
+        # fields = (
+        #     'picture', 'biography',
+        #     'born_date', 'country',
+        #     'gender', 'verified',
+        #     'profile_worker', 'profile_creator',
+        # )
+
+        # if view is not None:
+        #     # Users
+        #     if view.view_name == 'users' and view.action in view.fields_to_return:
+        #         fields = view.fields_to_return[view.action]['profile']
+
+        #     # Projects
+        #     elif view.view_name == 'projects' and view.action in view.fields_to_return:
+        #         fields = view.fields_to_return[view.action]['workers']['worker']['profile']
+
+
+        # # if action in ['application', 'project']:
+        # #     fields = (
+        # #         'picture',
+        # #         'profile_worker',
+        # #     )
+
+        # # if action == 'like':
+        # #     fields = (
+        # #         'picture',
+        # #     )
+
+        # return ProfileModelSerializer(obj.profile, fields=fields, context=self.context).data
+
+    def get_followers(self, obj):
+        """Return followers information."""
+        # Serializer
+        from apps.users.serializers import FollowModelSerializer
+
+        view = self.context.get('view', None)
         fields = (
-            'picture', 'biography',
-            'born_date', 'country',
-            'gender', 'verified',
-            'profile_worker', 'profile_creator',
+            'email', 'username',
+            'phone_number', 'first_name',
+            'last_name',
         )
 
-        if action == 'list':
-            fields = (
-                'picture',
-                'verified',
-                'born_date',
-                'profile_creator',
-                'profile_worker',
-            )
+        if view is not None:
+            # Users
+            if view.view_name == 'users' and view.action in view.fields_to_return:
+                fields = view.fields_to_return[view.action]['followers']
 
-        if action in ['application', 'project']:
-            fields = (
-                'picture',
-                'profile_worker',
-            )
+        return FollowModelSerializer(
+            Follow.objects.filter(followed=obj, status=1),
+            fields=fields,
+            context=self.context,
+            many=True
+        ).data
 
-        if action == 'like':
-            fields = (
-                'picture',
-            )
+    def get_followeds(self, obj):
+        """Return followers information."""
+        # Serializer
+        from apps.users.serializers import FollowModelSerializer
 
-        return ProfileModelSerializer(obj.profile, fields=fields, context=context).data
+        view = self.context.get('view', None)
+        fields = (
+            'email', 'username',
+            'phone_number', 'first_name',
+            'last_name',
+        )
+
+        if view is not None:
+            # Users
+            if view.view_name == 'users' and view.action in view.fields_to_return:
+                fields = view.fields_to_return[view.action]['followeds']
+
+        return FollowModelSerializer(
+            Follow.objects.filter(follower=obj, status=1),
+            fields=fields,
+            context=self.context,
+            many=True
+        ).data
+
+    def get_follow_requests(self, obj):
+        """Return follow requests."""
+        # Serializer
+        from apps.users.serializers import FollowModelSerializer
+        fields = (
+            'follower', 'status',
+            'code', 'created',
+        )
+
+        return FollowModelSerializer(
+            Follow.objects.filter(followed=obj, status=3),
+            fields=fields,
+            context=self.context,
+            many=True
+        ).data
+
+    def update(self, instance, data):
+        """Handle update with nested profile data."""
+        profile_data = data.pop('profile', None)
+        profile = instance.profile
+
+        # Updating user instance
+        instance.username = data.get('username', instance.username)
+        instance.email = data.get('email', instance.email)
+        instance.phone_number = data.get('phone_number', instance.phone_number)
+        instance.first_name = data.get('first_name', instance.first_name)
+        instance.last_name = data.get('last_name', instance.last_name)
+        instance.save()
+
+        # Updating profile nested instance
+        if profile_data is not None:
+            profile.picture = profile_data.get('picture', profile.picture)
+            profile.biography = profile_data.get('biography', profile.biography)
+            profile.born_date = profile_data.get('born_date', profile.born_date)
+            profile.gender = int(profile_data.get('get_gender_display', profile.gender))
+            profile.save()
+
+        return instance
+
 
 
 class UserSignupSerializer(serializers.Serializer):
@@ -102,7 +194,7 @@ class UserSignupSerializer(serializers.Serializer):
 
     # Phone number
     phone_regex = RegexValidator(
-        regex=r'^\+1?\d{9,15}$',
+        regex=r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$',
         message='Phone number must be in the format +999999999. From 9 to 15 characters allowed.'
     )
     phone_number = serializers.CharField(
@@ -119,7 +211,7 @@ class UserSignupSerializer(serializers.Serializer):
 
     # Choices
     gender = serializers.IntegerField()
-    country = serializers.IntegerField()
+    # country = serializers.IntegerField()
 
 
     def validate(self, data):
@@ -143,17 +235,15 @@ class UserSignupSerializer(serializers.Serializer):
         data.pop('password_confirmation')
         date = data.pop('born_date')
         gender = data.pop('gender')
-        country = data.pop('country')
 
-        user = User.objects.create(**data, is_active=False)
+        user = User.objects.create(**data, is_active=True)
         profile = Profile.objects.create(
             user=user,
             verified=False,
             born_date=date,
-            gender=gender,
-            country=country
+            gender=gender
         )
-        ProfileWorker.objects.create(profile=profile)
+        # ProfileWorker.objects.create(profile=profile)
         ProfileCreator.objects.create(profile=profile)
 
         token = Token.objects.create(user=user)
@@ -168,7 +258,7 @@ class UserSignupSerializer(serializers.Serializer):
         from_email = 'noreply@email.com'
         html_content = render_to_string(
             'users/email_verification.html',
-            {'token': token, 'user': user, 'host': 'localhost:8000'}
+            {'token': token, 'user': user, 'host': 'localhost:8080'}
         )
         msg = EmailMultiAlternatives(subject, html_content, from_email, [user.email])
         msg.attach_alternative(html_content, "text/html")

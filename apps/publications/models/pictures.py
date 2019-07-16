@@ -7,9 +7,9 @@ from django.db import models
 from apps.utils.models import ProjectModel
 
 
-class Picture(ProjectModel):
-    """Picture model."""
+# class Picture(ProjectModel):
+#     """Picture model."""
 
-    picture = models.ImageField(upload_to='statics.publications')
+#     picture = models.ImageField(upload_to='statics.publications')
 
-    publication = models.ForeignKey('publications.Publication', on_delete=models.CASCADE)
+#     publication = models.ForeignKey('publications.Publication', on_delete=models.CASCADE)

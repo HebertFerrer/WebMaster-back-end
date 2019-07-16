@@ -12,11 +12,11 @@ from apps.califications import views as calification_views
 
 router = DefaultRouter()
 
-router.register(
-    r'workers/(?P<id>[0-9]+)/califications',
-    calification_views.CalificationToWorkerViewSet,
-    basename='workers'
-)
+# router.register(
+#     r'workers/(?P<id>[0-9]+)/califications',
+#     calification_views.CalificationToWorkerViewSet,
+#     basename='workers'
+# )
 
 router.register(
     r'projects/(?P<slug_name>[a-zA-Z0-9-_]+)/califications',

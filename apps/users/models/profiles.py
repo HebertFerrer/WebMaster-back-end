@@ -21,13 +21,13 @@ class Profile(ProjectModel):
     """Profile model."""
 
     user = models.OneToOneField('users.User', on_delete=models.CASCADE)
-    picture = models.ImageField(upload_to='statics.users', blank=True, null=True)
+    picture = models.ImageField(upload_to='users', blank=True, null=True)
     biography = models.TextField(null=True, blank=True)
     born_date = models.DateField()
 
     # Choices
     gender = models.IntegerField(choices=GENDER_CHOICES)
-    country = models.IntegerField(choices=COUNTRY_CHOICES)
+    # country = models.IntegerField(choices=COUNTRY_CHOICES)
 
     verified = models.BooleanField(
         default=False,
@@ -40,20 +40,25 @@ class Profile(ProjectModel):
 class ProfileCreator(ProjectModel):
     """Creator's profile."""
 
-    reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
+    reputation = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        default=0,
+        validators=[reputation_validator]
+    )
     profile = models.OneToOneField(Profile, related_name='profile_creator', on_delete=models.CASCADE)
 
 
-class ProfileWorker(ProjectModel):
-    """Worker's profile."""
+# class ProfileWorker(ProjectModel):
+#     """Worker's profile."""
 
-    reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
-    profile = models.OneToOneField(Profile, related_name='profile_worker', on_delete=models.CASCADE)
+#     reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
+#     profile = models.OneToOneField(Profile, related_name='profile_worker', on_delete=models.CASCADE)
 
-    # CV
-    position = models.IntegerField(choices=POSITION_CHOICES, null=True)
+#     # CV
+#     position = models.IntegerField(choices=POSITION_CHOICES, null=True)
 
 
-    def __str__(self):
-        """Return str representation."""
-        return self.profile.user.__str__() # pylint: disable=not-callable
+#     def __str__(self):
+#         """Return str representation."""
+#         return self.profile.user.__str__() # pylint: disable=not-callable

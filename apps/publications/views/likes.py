@@ -6,14 +6,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 # Models
-from apps.publications.models import Publication, Like
+from apps.publications.models import Publication, LikeToPublication
 
 # Permissions
 from rest_framework.permissions import IsAuthenticated
-from apps.publications.permissions import IsComment_LikeOwner
+from apps.publications.permissions import IsCommentOwner
 
 # Serializers
-from apps.publications.serializers import LikeModelSerializer
+from apps.publications.serializers import LikeToPublicationModelSerializer
 
 # Utils
 from apps.utils.mixins import PublicationDispatchMixin
@@ -21,28 +21,28 @@ from apps.utils.views import DynamicFieldView
 
 
 class LikeViewSet(PublicationDispatchMixin,
-                  DynamicFieldView,
+                #   DynamicFieldView,
                   mixins.ListModelMixin,
                   mixins.CreateModelMixin,
                   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     """Generic view set."""
 
-    serializer_class = LikeModelSerializer
+    serializer_class = LikeToPublicationModelSerializer
 
     # Return dynamic fields
-    fields_to_return = {
-        'list': ('user',)
-    }
+    # fields_to_return = {
+    #     'list': ('user',)
+    # }
 
     def get_queryset(self):
         """Return queryset."""
-        return Like.objects.filter(publication=self.publication)
+        return LikeToPublication.objects.filter(publication=self.publication)
 
     def get_permissions(self):
         permission_classes = [IsAuthenticated]
         if self.action == 'destroy':
-            permission_classes.append(IsComment_LikeOwner)
+            permission_classes.append(IsCommentOwner)
         return [p() for p in permission_classes]
 
     def get_serializer_context(self):
@@ -56,8 +56,8 @@ class LikeViewSet(PublicationDispatchMixin,
     def dislike(self, request, id):
         """Handle dislike."""
         try:
-            instance = Like.objects.get(publication=self.publication, user=request.user)
-        except Like.DoesNotExist:
+            instance = LikeToPublication.objects.get(publication=self.publication, user=request.user)
+        except LikeToPublication.DoesNotExist:
             return Response(
                 {'alert': "Yout din't even liked this"},
                 status=status.HTTP_400_BAD_REQUEST

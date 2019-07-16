@@ -4,19 +4,22 @@
 from rest_framework import serializers
 
 # Models
-from apps.publications.models import Like
+from apps.publications.models import (
+    LikeToPublication,
+    # LikeToComment
+)
 
 # Utils
 from apps.utils.serializers import DynamicFieldsModelSerializer
 
-class LikeModelSerializer(DynamicFieldsModelSerializer):
+class LikeToPublicationModelSerializer(DynamicFieldsModelSerializer):
     """Like model serializer."""
 
     # Nested
     user = serializers.SerializerMethodField()
 
     class Meta:
-        model = Like
+        model = LikeToPublication
         fields = ('user', 'publication')
         read_only_fields = ('publication',)
 
@@ -26,8 +29,8 @@ class LikeModelSerializer(DynamicFieldsModelSerializer):
 
         return UserModelSerializer(
             obj.user,
-            fields=('username','profile',),
-            context={'action': 'like'}
+            fields=('username', 'profile',),
+            # context={'action': 'like'}
         ).data
 
 
@@ -35,7 +38,7 @@ class LikeModelSerializer(DynamicFieldsModelSerializer):
         """Handle validations."""
         user = self.context['request'].user
         publication = self.context['publication']
-        queryset = Like.objects.filter(publication=publication).values_list('user')
+        queryset = LikeToPublication.objects.filter(publication=publication).values_list('user')
         pk_list = [item[0] for item in queryset]
 
         if user.pk in pk_list:
@@ -48,7 +51,7 @@ class LikeModelSerializer(DynamicFieldsModelSerializer):
     def create(self, data):
         """Handle like create."""
         request = self.context['request']
-        return Like.objects.create(
+        return LikeToPublication.objects.create(
             user=request.user,
             publication=self.context['publication']
         )

@@ -11,12 +11,13 @@ from apps.users.models import Follow, User
 
 # Utils
 import uuid
+from apps.utils.serializers import DynamicFieldsModelSerializer
 
-class FollowModelSerializer(serializers.ModelSerializer):
+class FollowModelSerializer(DynamicFieldsModelSerializer):
     """Follow model serializer."""
 
-    follower = serializers.StringRelatedField()
-    followed = serializers.StringRelatedField()
+    follower = serializers.SerializerMethodField()
+    followed = serializers.SerializerMethodField()
 
     status = serializers.CharField(source='get_status_display')
 
@@ -26,7 +27,41 @@ class FollowModelSerializer(serializers.ModelSerializer):
         fields = (
             'follower', 'followed',
             'status', 'code',
+            'created',
         )
+
+    def get_follower(self, obj):
+        """Return followers information."""
+        view = self.context.get('view', None)
+        fields = (
+            'email', 'username',
+            'phone_number', 'first_name',
+            'last_name', 'profile',
+        )
+
+        if view is not None:
+            # Users
+            if view.view_name == 'users' and view.action in view.fields_to_return:
+                fields = view.fields_to_return[view.action]['followers']['follower']
+
+        return UserModelSerializer(obj.follower, fields=fields, context=self.context).data
+
+    def get_followed(self, obj):
+        """Return followers information."""
+        view = self.context.get('view', None)
+        fields = (
+            'email', 'username',
+            'phone_number', 'first_name',
+            'last_name', 'profile',
+        )
+
+        if view is not None:
+            # Users
+            if view.view_name == 'users' and view.action in view.fields_to_return:
+                fields = view.fields_to_return[view.action]['followeds']['followed']
+
+        return UserModelSerializer(obj.followed, fields=fields, context=self.context).data
+
 
 
 class FollowCreateSerializer(serializers.Serializer):

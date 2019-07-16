@@ -22,6 +22,8 @@ from apps.utils.mixins import ProjectDispatchMixin
 
 
 class PublicationViewSet(ProjectDispatchMixin,
+                         mixins.ListModelMixin,
+                         mixins.CreateModelMixin,
                          mixins.UpdateModelMixin,
                          mixins.DestroyModelMixin,
                          viewsets.GenericViewSet):
@@ -31,7 +33,14 @@ class PublicationViewSet(ProjectDispatchMixin,
     """
 
     serializer_class = PublicationModelSerializer
-    permission_classes = [IsAuthenticated, IsProjectOwner, ProjectIsNotFinished]
+    # permission_classes = [IsAuthenticated, IsProjectOwner, ProjectIsNotFinished]
+
+    def get_permissions(self):
+        """Return permissions base on action."""
+        permission_classes = [IsAuthenticated]
+        if self.action in ['create', 'update', 'delete']:
+            permission_classes.extend([IsProjectOwner, ProjectIsNotFinished])
+        return [p() for p in permission_classes]
 
     def get_queryset(self):
         """Return queryset."""

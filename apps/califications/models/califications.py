@@ -6,13 +6,18 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 # Utils
 from apps.utils.models import ProjectModel
+from apps.utils.validators import reputation_validator
 
 
 class Calification(ProjectModel):
     """Calification model."""
 
-    stars = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
-    comments = models.TextField()
+    stars = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        validators=[reputation_validator]
+    )
+    comment = models.TextField()
 
     _from = models.ForeignKey('users.User', on_delete=models.CASCADE)
 
@@ -21,10 +26,10 @@ class Calification(ProjectModel):
         abstract = True
 
 
-class CalificationToWorker(Calification):
-    """Calification to worker."""
+# class CalificationToWorker(Calification):
+#     """Calification to worker."""
 
-    worker = models.ForeignKey('users.ProfileWorker', on_delete=models.CASCADE)
+#     worker = models.ForeignKey('users.ProfileWorker', on_delete=models.CASCADE)
 
 
 class CalificationToProject(Calification):
@@ -33,7 +38,7 @@ class CalificationToProject(Calification):
     project = models.ForeignKey('projects.Project', on_delete=models.CASCADE)
 
 
-class CalificationToCreator(Calification):
-    """Calification to Creator."""
+# class CalificationToCreator(Calification):
+#     """Calification to Creator."""
 
-    creator = models.ForeignKey('users.ProfileCreator', on_delete=models.CASCADE)
+#     creator = models.ForeignKey('users.ProfileCreator', on_delete=models.CASCADE)

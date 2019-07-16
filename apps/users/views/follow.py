@@ -21,15 +21,32 @@ from apps.users.serializers import (
     FollowModelSerializer,
     FollowCreateSerializer,
     FollowAcceptSerializer,
+    FollowRejectSerializer
 )
 
+# Utils
+from apps.utils.views import DynamicFieldView
 
-class FollowViewSet(mixins.CreateModelMixin,
+class FollowViewSet(DynamicFieldView,
+                    mixins.CreateModelMixin,
                     viewsets.GenericViewSet):
     """Follow view set."""
 
     serializer_class = FollowModelSerializer
     lookup_field = 'code'
+
+
+    # Return dynamic fields
+    view_name = 'users'
+    fields_to_return = {
+        "retrieve": {
+            'follower': None,
+            'followed': None,
+            'status': None,
+            'code': None,
+            'created': None
+        }
+    }
 
 
     def get_queryset(self):
@@ -94,7 +111,7 @@ class FollowViewSet(mixins.CreateModelMixin,
     def reject(self, request, username, code):
         """Accept follow invitation."""
         follow_request = get_object_or_404(Follow, code=code, followed=self.user)
-        serializer = FollowAcceptSerializer(follow_request, data=request.data)
+        serializer = FollowRejectSerializer(follow_request, data=request.data)
         serializer.is_valid(raise_exception=True)
         follow = serializer.save()
         data = self.get_serializer(follow).data

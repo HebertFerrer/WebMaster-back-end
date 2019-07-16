@@ -18,5 +18,5 @@ class UserFilter(filters.FilterSet):
             'username',
             'profile__verified',
             'profile__born_date',
-            'profile__profile_worker__reputation',
+            # 'profile__profile_worker__reputation',
         )

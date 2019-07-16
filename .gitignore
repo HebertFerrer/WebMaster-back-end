@@ -1,2 +1,6 @@
 /db diagrama
-manage.py
+*.py[cod]
+*$py.class
+.vscode
+__pycache__
+apps/emails/*

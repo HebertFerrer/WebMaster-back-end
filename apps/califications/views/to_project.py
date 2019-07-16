@@ -19,23 +19,24 @@ from apps.utils.views import DynamicFieldView
 
 
 class CalificationToProjectViewSet(ProjectDispatchMixin,
-                                   DynamicFieldView,
+                                #    DynamicFieldView,
                                    mixins.ListModelMixin,
                                    mixins.CreateModelMixin,
                                    viewsets.GenericViewSet):
     """Calification to worker view set."""
 
     serializer_class = CalificationToProjectModelSerializer
+    queryset = CalificationToProject.objects.all()
 
     # Dynamic fields
-    fields_to_return = {
-        'list': ('stars', 'comments', '_from',)
-    }
+    # fields_to_return = {
+    #     'list': ('stars', 'comments', '_from',)
+    # }
 
 
-    def get_queryset(self):
-        """Return queryset."""
-        return CalificationToProject.objects.filter(project=self.project)
+    # def get_queryset(self):
+    #     """Return queryset."""
+    #     return CalificationToProject.objects.filter(project=self.project)
 
     def get_serializer_context(self):
         """Add extra context base on action."""

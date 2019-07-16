@@ -14,7 +14,7 @@ from apps.users.views import follow as follow_views
 router = routers.DefaultRouter()
 router.register(r'users', user_views.UserViewSet, basename='users')
 router.register(
-    r'users/(?P<username>[a-zA-Z0-9-_]+)/follow',
+    r'users/(?P<username>[a-zA-Z0-9-_@]+)/follow',
     follow_views.FollowViewSet,
     basename='follow'
 )

@@ -26,34 +26,32 @@ class DonationModelSerializer(serializers.ModelSerializer):
 class DonationCreateSerializer(serializers.Serializer):
     """Donation create serializer."""
 
-    stripeToken = serializers.CharField()
-    amount = serializers.IntegerField()
+    # stripeToken = serializers.CharField()
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     _from = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def validate_amount(self, value):
         """Ammount validator."""
-        if value < 1:
-            raise serializers.ValidationError('amount must be at least 1$')
+        if value < 5:
+            raise serializers.ValidationError('amount must be at least 5$')
         return value
 
     def create(self, data):
         """Handle creation."""
         amount = data['amount']
 
-        response = stripe.Charge.create(
-            amount=amount,
-            currency="usd",
-            source=data['stripeToken'],
-            description="Donation"
+        # response = stripe.Charge.create(
+        #     amount=amount,
+        #     currency="usd",
+        #     source=data['stripeToken'],
+        #     description="Donation"
+        # )
+
+        database_amount = amount * 10
+        print(amount)
+        # if response.paid:
+        return Donation.objects.create(
+            project=self.context['project'],
+            _from=data['_from'],
+            amount=amount
         )
-
-        database_amount = amount / 100
-
-        print(database_amount, amount)
-
-        if response.paid:
-            return Donation.objects.create(
-                project=self.context['project'],
-                _from=data['_from'],
-                amount=database_amount
-            )

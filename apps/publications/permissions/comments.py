@@ -4,7 +4,7 @@
 from rest_framework.permissions import BasePermission
 
 
-class IsComment_LikeOwner(BasePermission):
+class IsCommentOwner(BasePermission):
     """Validate if the request user is the comment owner."""
 
     def has_permission(self, request, view):

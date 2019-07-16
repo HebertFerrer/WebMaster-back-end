@@ -21,7 +21,7 @@ class User(ProjectModel, AbstractUser):
     )
 
     phone_regex = RegexValidator(
-        regex=r'\+?1?\d{9,15}$',
+        regex=r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$',
         message='Phone number must be in the format +999999999. From 9 to 15 characters allowed.'
     )
     phone_number = models.CharField(unique=True, max_length=20, validators=[phone_regex])

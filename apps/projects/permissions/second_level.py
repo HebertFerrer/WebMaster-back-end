@@ -27,6 +27,10 @@ class ProjectIsNotFinished(BaseException):
         """Check permisions."""
         return not view.get_project().finished
 
+    def has_object_permission(self, request, view, obj):
+        """Check permisions."""
+        return not view.get_project().finished
+
 
 class ProjectIsFinished(BaseException):
     """Check if project is finished."""
@@ -34,3 +38,8 @@ class ProjectIsFinished(BaseException):
     def has_permission(self, request, view):
         """Check permisions."""
         return view.get_project().finished
+
+    def has_object_permission(self, request, view, obj):
+        """Check permisions."""
+        return view.get_project().finished
+

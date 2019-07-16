@@ -5,6 +5,7 @@ from django.db import models
 
 # Models
 from apps.utils.models import ProjectModel
+from apps.donations.models import Donation
 
 # Choices
 from apps.projects.choices import CATEGORY_CHOICES
@@ -21,17 +22,22 @@ class Project(ProjectModel):
     description = models.TextField()
 
     cost = models.DecimalField(max_digits=12, decimal_places=2)
-    reputation = models.SmallIntegerField(default=0, validators=[reputation_validator])
+    reputation = models.DecimalField(
+        max_digits=2,
+        decimal_places=1,
+        default=0,
+        validators=[reputation_validator]
+    )
 
     category = models.IntegerField(choices=CATEGORY_CHOICES)
     creator = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
 
     # m2m
-    workers = models.ManyToManyField(
-        'users.User',
-        related_name='workers',
-        through='projects.Worker'
-    )
+    # workers = models.ManyToManyField(
+    #     'users.User',
+    #     related_name='workers',
+    #     through='projects.Worker'
+    # )
 
     finished = models.BooleanField(default=False)
 

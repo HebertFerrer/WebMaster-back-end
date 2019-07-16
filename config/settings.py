@@ -58,8 +58,9 @@ LOCAL_APPS = (
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -147,6 +148,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'apps', 'static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Media
 MEDIA_ROOT = os.path.join(BASE_DIR, 'apps', 'media')
@@ -177,7 +179,7 @@ STRIPE_SECRET_KEY = 'sk_test_X8DiriGOSG6x0b6moMpXbH6h0008t3RKyn'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_FVpIE8JG8Vjkj9VStUt6OypD00ksisCKw9'
 
 # Allowed host
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'profactory.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'profactory.herokuapp.com']
 CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8080',
     'localhost:8080',

@@ -40,18 +40,17 @@ class DonationCreateSerializer(serializers.Serializer):
         """Handle creation."""
         amount = data['amount']
 
-        # response = stripe.Charge.create(
-        #     amount=amount,
-        #     currency="usd",
-        #     source=data['stripeToken'],
-        #     description="Donation"
-        # )
+        response = stripe.Charge.create(
+            amount=amount,
+            currency="usd",
+            source=data['stripeToken'],
+            description="Donation"
+        )
 
         database_amount = amount * 10
-        print(amount)
-        # if response.paid:
-        return Donation.objects.create(
-            project=self.context['project'],
-            _from=data['_from'],
-            amount=amount
-        )
+        if response.paid:
+            return Donation.objects.create(
+                project=self.context['project'],
+                _from=data['_from'],
+                amount=amount
+            )

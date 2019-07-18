@@ -180,11 +180,11 @@ STRIPE_PUBLISHABLE_KEY = 'pk_test_FVpIE8JG8Vjkj9VStUt6OypD00ksisCKw9'
 
 # Allowed host
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'profactory.herokuapp.com']
-CORS_ORIGIN_WHITELIST = (
-    '127.0.0.1:8080',
-    'localhost:8080',
-)
-# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_WHITELIST = (
+#     '127.0.0.1:8080',
+#     'localhost:8080',
+# )
+CORS_ORIGIN_ALLOW_ALL = True
 
 # SSL
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

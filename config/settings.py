@@ -155,6 +155,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'apps', 'media')
 MEDIA_URL = '/media/'
 
 
+# Dropbox storage
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN = 'FxF0RS8LOlEAAAAAAAAFvhJpKki_JV0o-Ai2gNcdZGemCqUU3dALAHSyDjrBWZGI'
+DROPBOX_ROOT_PATH = '/media/'
+
+
 # Configuration to REST Framework.
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

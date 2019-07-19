@@ -12,7 +12,7 @@ pylint==2.3.1
 pylint-django==2.0.8
 
 # Database
-psycopg2
+psycopg2-binary
 
 # Payment method
 stripe==2.28.0
@@ -28,3 +28,4 @@ whitenoise==4.1.2
 
 # Storage
 django-storages==1.7.1
+dropbox==9.4.0

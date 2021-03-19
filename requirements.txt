@@ -4,7 +4,7 @@ django-extensions==2.1.6
 Pillow==6.0.0
 
 # Django REST Framework
-djangorestframework==3.9.2
+djangorestframework==3.11.2
 django-filter==2.1.0
 
 # Syntax
